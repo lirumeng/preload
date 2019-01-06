@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>图片预加载之无序加载——QQ表情</title>
+    <style>
+        body,
+        p,
+        ul,
+        li {
+            padding: 0;
+            margin: 0
+        }
+        
+        a {
+            text-decoration: none;
+            color: #333;
+        }
+        
+        .box {
+            width: 701px;
+            margin: 50px auto 0;
+        }
+        
+        .panel {
+            width: 100%;
+            max-height: 350px;
+            overflow-y: auto;
+            border: 1px solid #ccc;
+            display: none;
+        }
+        
+        .panel li {
+            width: 34px;
+            height: 34px;
+            display: inline-block;
+            border: 1px solid #fff;
+        }
+        
+        li img {
+            width: 100%;
+            height: 100%;
+        }
+        
+        #face-btn {
+            height: 30px;
+            line-height: 30px;
+            text-indent: 32px;
+            background-image: url('./face/face1.png');
+            background-repeat: no-repeat;
+            background-size: contain;
+            display: inline-block;
+        }
+        
+        #face-btn:hover {
+            background-image: url('./face/face2.png');
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="box">
+        <a href="javascript:;" id="face-btn">表情</a>
+        <div class="panel">
+            <p class="loading">表情加载中，请稍后...</p>
+            <!-- <ul class="list">
+                <li><img src="./face/QQ/b(1).jpg" alt=""></li>
+            </ul> -->
+        </div>
+    </div>
+
+    <script src="./jquery/jquery.min.js"></script>
+    <script src="./jquery/preload.js"></script>
+    <script>
+        var $btn = $('#face-btn'),
+            $panel = $('.panel'),
+            imgs = [];
+
+        for (var i = 0; i < 457; i++) {
+            imgs[i] = './face/QQ/b(' + (i + 1) + ').jpg';
+        }
+
+        var len = imgs.length;
+
+        $btn.on('click', function(e) {
+            e.stopPropagation()
+            $panel.show();
+
+            $.preload(imgs, {
+                all: function() {
+                    var html = '<ul class="list>';
+
+                    imgs.forEach(function(url) {
+                        html += '<li><img src="' + url + '" alt=""></li>';
+                    })
+
+                    html += '<ul>';
+
+                    $panel.html(html);
+                }
+            })
+        })
+
+        $(document).on('click', function() {
+            $panel.hide()
+        })
+    </script>
+</body>
+
+</html>
